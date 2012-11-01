@@ -1,5 +1,5 @@
 {
-    "name": "ztec/security/active_directory",
+    "name": "ztec/security-active_directory",
     "type": "library",
     "description": "This is a bundle to allow authentication into symfony2.1 by an Active directory",
     "keywords": ["active directory","ldap","symfony","bundle"],
