@@ -1,0 +1,18 @@
+parameters:
+    ztec_security_active_directory_user_provider.class: Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider
+    ztec_security_active_directory_authentication_provider.class: Ztec\Security\ActiveDirectoryBundle\Security\Authentication\AdAuthProvider
+    ztec_security_active_directory_service_adldap.class: Ztec\Security\ActiveDirectoryBundle\Service\AdldapService
+
+services:
+    ztec.security.active.directory.user.provider:
+        class: "%ztec_security_active_directory_user_provider.class%"
+        arguments: [ "@service_container", "@ztec.security.active.directory.service.adldap"]
+
+    ztec.security.active.directory.authentication.provider:
+        class: "%ztec_security_active_directory_authentication_provider.class%"
+        arguments: [ "@ztec.security.active.directory.user.provider", "", "@ztec.security.active.directory.service.adldap"]
+
+    ztec.security.active.directory.service.adldap:
+        class: "%ztec_security_active_directory_service_adldap.class%"
+        arguments: [ "@service_container" ]
+
