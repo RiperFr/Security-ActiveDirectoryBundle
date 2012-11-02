@@ -1,11 +1,11 @@
 Ztec/Security/ActiveDirectory
-=============================
+======================================
 
 This package is a bundle for symfony 2.1. It use the standard form_login security model to authenticate user from an Active Directory domain.
 It use LDAP as communication layer. So you need the LDAP extension installed on your server to make it work.
 
 Requirements
-============
+----------------
 php 5.2
 php_ldap
 ssl configuration for LDAP. see see http://adldap.sourceforge.net/wiki/doku.php?id=ldap_over_ssl
@@ -13,7 +13,7 @@ Symfony 2.1
 
 
 Installation
-============
+----------------
 You need to add a package to your dependency list :
     //composer.json
     "ztec/security-active_directory": "dev-master"
@@ -59,7 +59,7 @@ You need to add security parameters
 
 
 Useful information
-=================
+----------------------
 Roles are got from Active directory. The name is transform to match the ROLE system of Symfony2
     Domain User => ROLE_DOMAIN_USER
     Administrators = ROLE_ADMINISTRATORS
