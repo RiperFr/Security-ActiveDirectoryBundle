@@ -7,22 +7,29 @@ It use LDAP as communication layer. So you need the LDAP extension installed on 
 Requirements
 ----------------
 php 5.2
+
 php_ldap
+
 ssl configuration for LDAP. see see http://adldap.sourceforge.net/wiki/doku.php?id=ldap_over_ssl
+
 Symfony 2.1
 
 
 Installation
 ----------------
+
 You need to add a package to your dependency list :
+
     //composer.json
     "ztec/security-active_directory": "dev-master"
 
 You need to enable the bundle into your kernel
+
     //app/AppKernel.php
     new Ztec\Security\ActiveDirectoryBundle\ZtecSecurityActiveDirectoryBundle(),
 
 You need to configure your domain specific information
+
     //app/config/config.yml
     parameters:
         ztec.security.active_directory.settings:
@@ -43,6 +50,7 @@ You need to configure your domain specific information
               - /(.*)/i #like toto
 
 You need to add security parameters
+
     //app/config/security.yml
     encoders:
         Ztec\Security\ActiveDirectoryBundle\Security\User\adUser : plaintext #Active directory does not support encrypted password yet
@@ -60,6 +68,7 @@ You need to add security parameters
 
 Useful information
 ----------------------
+
 Roles are got from Active directory. The name is transform to match the ROLE system of Symfony2
     Domain User => ROLE_DOMAIN_USER
     Administrators = ROLE_ADMINISTRATORS
