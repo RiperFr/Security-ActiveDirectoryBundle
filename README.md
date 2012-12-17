@@ -6,7 +6,7 @@ It use LDAP as communication layer. So you need the LDAP extension installed on 
 
 Requirements
 ----------------
-php 5.2
+php 5.2.4
 
 php_ldap
 
@@ -30,7 +30,7 @@ You need to enable the bundle into your kernel
 
 You need to configure your domain specific information
 
-    //app/config/config.yml
+    //app/config/config.yml or app/config/parameters.yml
     parameters:
         ztec.security.active_directory.settings:
             account_suffix : riper.fr # without the @ at the beginning
