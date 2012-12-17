@@ -88,6 +88,8 @@ class adUserProvider implements UserProviderInterface
         }
         $newUser = $this->loadUserByUsername($user->getUsername());
         $newUser->setPassword($user->getPassword()); //we reset the password
+        $newUser->setRoles($user->getRoles());
+        
         return $newUser;
     }
 
