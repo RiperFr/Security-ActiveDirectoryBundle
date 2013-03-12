@@ -107,7 +107,7 @@ class adUserProvider implements UserProviderInterface
             $groups = array();
             //$allGroups = $adLdap->search_groups(ADLDAP_SECURITY_GLOBAL_GROUP,true);
             foreach($user->memberOf as $k=>$group){
-                if($k !== 'count'){
+                if($k !== 'count' && $group){
                     $reg = '#CN=([^,]*)#' ;
                     preg_match_all($reg,$group,$out);
                     $groups[] = $out[1][0] ;
