@@ -12,7 +12,7 @@ php_ldap
 
 ssl configuration for LDAP. see see http://adldap.sourceforge.net/wiki/doku.php?id=ldap_over_ssl
 
-Symfony 2.1
+Compatible with Symfony 2.1, 2.2 and 2.3.x
 
 
 Installation
@@ -41,9 +41,8 @@ You need to configure your domain specific information
             real_primarygroup : true #For Linux compatibility.
             use_ssl : false #Set it true need configuration of the server to be usefull
             use_tls : false #Set it true need configuration of the server to be usefull
-            recursive_groups : false #Used Only for group test (not userInfo)
 			recursive_grouproles: false #recursive group roles
-            sso : false #Use NTML. Not yet compatible with Symfony !!!
+			username_validation_pattern: /^[a-z0-9-.]+$/i #Regex that check the final username value (extracted from patterns below). Must be complient with you Active directory acceptance.
             username_patterns: #username is extracted from the string the user put into the login form
               - /([^@]*)@riper.fr/i  # like toto@riper.fr
               - /RIPER\\(.*)/i #like RIPER\toto

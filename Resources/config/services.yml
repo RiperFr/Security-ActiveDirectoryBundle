@@ -6,13 +6,13 @@ parameters:
 services:
     ztec.security.active.directory.user.provider:
         class: "%ztec_security_active_directory_user_provider.class%"
-        arguments: [ "@service_container", "@ztec.security.active.directory.service.adldap"]
+        arguments: [ "%ztec.security.active_directory.settings%", "@ztec.security.active.directory.service.adldap", "@translator"]
 
     ztec.security.active.directory.authentication.provider:
         class: "%ztec_security_active_directory_authentication_provider.class%"
-        arguments: [ "@ztec.security.active.directory.user.provider", "", "@ztec.security.active.directory.service.adldap"]
+        arguments: [ "@ztec.security.active.directory.user.provider", "", "@ztec.security.active.directory.service.adldap", "@translator"]
 
     ztec.security.active.directory.service.adldap:
         class: "%ztec_security_active_directory_service_adldap.class%"
-        arguments: [ "@service_container" ]
+        arguments: [ "%ztec.security.active_directory.settings%" ]
 

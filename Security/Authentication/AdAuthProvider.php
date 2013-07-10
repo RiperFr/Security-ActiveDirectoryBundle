@@ -3,6 +3,7 @@
 namespace Ztec\Security\ActiveDirectoryBundle\Security\Authentication;
 
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider;
 use Ztec\Security\ActiveDirectoryBundle\Security\User\adUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -18,12 +19,21 @@ class AdAuthProvider implements AuthenticationProviderInterface
      * @var \Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider
      */
     private $userProvider;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
-    public function __construct(adUserProvider $userProvider, $config, AdldapService $AdldapService)
-    {
-        $this->userProvider = $userProvider;
-        $this->config = $config;
+    public function __construct(
+        adUserProvider $userProvider,
+        array $config,
+        AdldapService $AdldapService,
+        TranslatorInterface $translator
+    ) {
+        $this->userProvider  = $userProvider;
+        $this->config        = $config;
         $this->AdldapService = $AdldapService;
+        $this->translator    = $translator;
     }
 
     /**
@@ -38,10 +48,13 @@ class AdAuthProvider implements AuthenticationProviderInterface
     public function authenticate(TokenInterface $token)
     {
         $Adldap = $this->AdldapService->getInstance();
-        $User = $this->userProvider->loadUserByUsername($token->getUsername());
+        $User   = $this->userProvider->loadUserByUsername($token->getUsername());
         if ($User instanceof adUser) {
             if (!$Adldap->authenticate($User->getUsername(), $token->getCredentials())) {
-                throw new BadCredentialsException('The credentials are wrong');
+                $msg = $this->translator->trans(
+                    'ztec.security.active_directory.wrong_credential'
+                ); //'The credentials are wrong'
+                throw new BadCredentialsException($msg);
             }
             $User->setPassword($token->getCredentials());
             $this->userProvider->fetchData($User, $Adldap);

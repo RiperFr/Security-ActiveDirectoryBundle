@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
-use  Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FormLoginFactory;
 
 class AdAuthFactory extends FormLoginFactory
@@ -24,16 +24,16 @@ class AdAuthFactory extends FormLoginFactory
      * AuthenticationProviderInterface.
      *
      * @param ContainerBuilder $container
-     * @param string           $id             The unique id of the firewall
-     * @param array            $config         The options array for this listener
-     * @param string           $userProviderId The id of the user provider
+     * @param string $id             The unique id of the firewall
+     * @param array $config         The options array for this listener
+     * @param string $userProviderId The id of the user provider
      *
      * @return string never null, the id of the authentication provider
      */
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
 
-        $providerId = 'security.authentication.provider.ztec.active_directory.'.$id;
+        $providerId = 'security.authentication.provider.ztec.active_directory.' . $id;
         $container
             ->setDefinition(
                 $providerId,
@@ -41,6 +41,7 @@ class AdAuthFactory extends FormLoginFactory
             )
             ->replaceArgument(0, new Reference("ztec.security.active.directory.user.provider"))
             ->replaceArgument(1, $config);
+
         //exit();
         return $providerId;
     }

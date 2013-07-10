@@ -6,26 +6,52 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
 use adLDAP\adLDAP;
 
 class adUserProvider implements UserProviderInterface
 {
     private $usernamePatterns = array();
-    public function __construct(ContainerInterface $Container, AdldapService $AdldapService)
+    private $recursiveGrouproles = false;
+
+    /**
+     * @var Translator
+     */
+    private $translator;
+
+    private $config = array();
+
+    public function __construct(array $config, AdldapService $AdldapService, TranslatorInterface $translator)
     {
-        $this->container = $Container;
-        $this->AdldapService = $AdldapService;
-        $config = $Container->getParameter('ztec.security.active_directory.settings');
-        if (isset($config['username_patterns']) && is_array($config['username_patterns'])) {
-            foreach ($config['username_patterns'] as $pat) {
-                array_push($this->usernamePatterns, $pat);
-            }
+        $this->config     = $config;
+        $this->translator = $translator;
+
+        $this->recursiveGrouproles = $this->getConfig('recursive_grouproles', false);
+        $username_patterns         = $this->getConfig('username_patterns', array());
+        foreach ($username_patterns as $pat) {
+            array_push($this->usernamePatterns, $pat);
         }
-        if (isset($config['recursive_grouproles']) && $config['recursive_grouproles'] == true) {
-            $this->recursiveGrouproles = true;
+
+
+    }
+
+
+    /**
+     * retrive a configuration value. make all required test.
+     * @param $name
+     * @param $default
+     * @return mixed
+     */
+    protected function getConfig($name, $default)
+    {
+        if (!isset($this->config[$name])) {
+            $return = $default;
+        } else {
+            $return = $this->config[$name];
         }
+
+        return $return;
     }
 
     /**
@@ -45,12 +71,30 @@ class adUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
+        // The password is set to something impossible to find.
+        try {
+            $userString = $this->getUsernameFromString($username);
+            $user       = new adUser($this->getUsernameFromString($userString), uniqid(true) . rand(
+                    0,
+                    424242
+                ), array());
+        } catch (\InvalidArgumentException $e) {
+            $msg = $this->translator->trans(
+                'ztec.security.active_directory.invalid_user',
+                array('%reason%' => $e->getMessage())
+            );
+            throw new UsernameNotFoundException($msg);
+        }
 
-        $user = new adUser($this->getUsernameFromString($username), '42', array());
         return $user;
-        //throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
     }
 
+
+    /**
+     * @param $string
+     * @return string
+     * @throws \InvalidArgumentException
+     */
     public function getUsernameFromString($string)
     {
         $username = $string;
@@ -61,15 +105,19 @@ class adUserProvider implements UserProviderInterface
             }
         }
         $username = strtolower($username);
-        /*echo $username;*/
-        if (preg_match('/^[a-z0-9-.]+$/i', $username) == true) {
-            /* echo 'ok';
-             exit();*/
+        $patern   = $this->getConfig('username_validation_pattern', '/^[a-z0-9-.]+$/i');
+        if (preg_match($patern, $username) == true) {
             return $username;
         }
-        /*echo 'bad';
-        exit();*/
-        throw new \InvalidArgumentException('The username does not match any rules');
+        {
+            $msg = $this->translator->trans(
+                'ztec.security.active_directory.username_not_matching_rules',
+                array(
+                    '%username%' => $username
+                )
+            );
+            throw new \InvalidArgumentException($msg);
+        }
     }
 
     /**
@@ -88,7 +136,13 @@ class adUserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user)
     {
         if (!$user instanceof adUser) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
+            $msg = $this->translator->trans(
+                'ztec.security.active_directory.bad_isntance',
+                array(
+                    '%class_name%' => get_class($user)
+                )
+            );
+            throw new UnsupportedUserException($msg);
         }
         $newUser = $this->loadUserByUsername($user->getUsername());
         $newUser->setPassword($user->getPassword()); //we reset the password
@@ -101,12 +155,17 @@ class adUserProvider implements UserProviderInterface
     public function fetchData(adUser $adUser, adLDAP $adLdap)
     {
         $connected = $adLdap->connect();
-        $isAD = $adLdap->authenticate($adUser->getUsername(), $adUser->getPassword());
+        $isAD      = $adLdap->authenticate($adUser->getUsername(), $adUser->getPassword());
         if (!$isAD || !$connected) {
+            $msg = $this->translator->trans(
+                'ztec.security.active_directory.ad.bad_response',
+                array(
+                    '%connexion_status%' => var_export($connected, 1),
+                    '%is_AD%'            => var_export($isAD, 1),
+                )
+            );
             throw new \Exception(
-                'Active directory dit not respond well ' .
-                var_export($isAD, 1) . ' - ' .
-                var_export($connected, 1)
+                $msg
             );
         }
         $user = $adLdap->user()->infoCollection($adUser->getUsername());
@@ -115,8 +174,8 @@ class adUserProvider implements UserProviderInterface
         if ($user) {
             $groups = array();
             //$allGroups = $adLdap->search_groups(ADLDAP_SECURITY_GLOBAL_GROUP,true);
-
-            if ($this->recursiveGrouproles == true) {
+            $groups = $adLdap->user()->groups($adUser->getUsername(), $this->recursiveGrouproles);
+            /*if ($this->recursiveGrouproles == true) {
                 // get recursive groups via adLdap
                 $groups = $adLdap->user()->groups($adUser->getUsername(), true);
             } else {
@@ -128,17 +187,16 @@ class adUserProvider implements UserProviderInterface
                         /* if(array_key_exists($out[1][0],$allGroups)){
                              $groups[$out[1][0]] = $allGroups[$out[1][0]];
                          }*/
-                    }
-                }
-            }
+            /*}
+        }
+    }*/
             /** End Fetching */
-
-            $roles = array('USER','Domain_users');
             $sfRoles = array();
             foreach ($groups as $r) {
                 $sfRoles[] = 'ROLE_' . strtoupper(str_replace(' ', '_', $r));
             }
             $adUser->setRoles($sfRoles);
+
             return true;
         }
     }

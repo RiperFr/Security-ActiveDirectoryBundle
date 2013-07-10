@@ -15,12 +15,10 @@ class AdldapService
     /**
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container  Dependency injection
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(array $parameters)
     {
-        $this->container = $container;
-        $parameters = $container->getParameter('ztec.security.active_directory.settings');
         $parameters['account_suffix'] = '@' . $parameters['account_suffix'];
-        $this->paramerters = $parameters;
+        $this->paramerters            = $parameters;
     }
 
     /**
@@ -29,6 +27,7 @@ class AdldapService
     public function getInstance()
     {
         $this->adLdap = new adLDAP($this->paramerters);
+
         return $this->adLdap;
     }
 }
