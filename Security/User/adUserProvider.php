@@ -21,8 +21,10 @@ class adUserProvider implements UserProviderInterface
                 array_push($this->usernamePatterns, $pat);
             }
         }
+        if (isset($config['recursive_grouproles']) && $config['recursive_grouproles'] == true) {
+            $this->recursiveGrouproles = true;
+        }
     }
-
 
     /**
      * Loads the user for the given username.
@@ -89,7 +91,7 @@ class adUserProvider implements UserProviderInterface
         $newUser = $this->loadUserByUsername($user->getUsername());
         $newUser->setPassword($user->getPassword()); //we reset the password
         $newUser->setRoles($user->getRoles());
-        
+
         return $newUser;
     }
 
@@ -106,14 +108,20 @@ class adUserProvider implements UserProviderInterface
         if ($user) {
             $groups = array();
             //$allGroups = $adLdap->search_groups(ADLDAP_SECURITY_GLOBAL_GROUP,true);
-            foreach($user->memberOf as $k=>$group){
-                if($k !== 'count' && $group){
-                    $reg = '#CN=([^,]*)#' ;
-                    preg_match_all($reg,$group,$out);
-                    $groups[] = $out[1][0] ;
-                    /* if(array_key_exists($out[1][0],$allGroups)){
-                         $groups[$out[1][0]] = $allGroups[$out[1][0]];
-                     }*/
+
+            if ($this->recursiveGrouproles == true) {
+                // get recursive groups via adLdap
+                $groups = $adLdap->user()->groups($adUser->getUsername(),true);
+            } else {
+                foreach($user->memberOf as $k=>$group){
+                    if($k !== 'count' && $group){
+                        $reg = '#CN=([^,]*)#' ;
+                        preg_match_all($reg,$group,$out);
+                        $groups[] = $out[1][0] ;
+                        /* if(array_key_exists($out[1][0],$allGroups)){
+                             $groups[$out[1][0]] = $allGroups[$out[1][0]];
+                         }*/
+                    }
                 }
             }
             /** End Fetching */
