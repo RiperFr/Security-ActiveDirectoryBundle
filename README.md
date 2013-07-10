@@ -42,6 +42,7 @@ You need to configure your domain specific information
             use_ssl : false #Set it true need configuration of the server to be usefull
             use_tls : false #Set it true need configuration of the server to be usefull
             recursive_groups : false #Used Only for group test (not userInfo)
+			recursive_grouproles: false #recursive group roles
             sso : false #Use NTML. Not yet compatible with Symfony !!!
             username_patterns: #username is extracted from the string the user put into the login form
               - /([^@]*)@riper.fr/i  # like toto@riper.fr

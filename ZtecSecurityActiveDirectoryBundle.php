@@ -3,8 +3,8 @@
 namespace Ztec\Security\ActiveDirectoryBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder ;
-use Ztec\Security\ActiveDirectoryBundle\Security\Factory\AdAuthFactory ;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Ztec\Security\ActiveDirectoryBundle\Security\Factory\AdAuthFactory;
 
 class ZtecSecurityActiveDirectoryBundle extends Bundle
 {
