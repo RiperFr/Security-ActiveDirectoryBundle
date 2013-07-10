@@ -1,20 +1,22 @@
 <?php
+
 namespace Ztec\Security\ActiveDirectoryBundle\Security\User;
+
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
-use adLDAP\adLDAP ;
+use adLDAP\adLDAP;
 
 class adUserProvider implements UserProviderInterface
 {
-    private $usernamePatterns = array() ;
+    private $usernamePatterns = array();
     public function __construct(ContainerInterface $Container, AdldapService $AdldapService)
     {
         $this->container = $Container;
-        $this->AdldapService = $AdldapService ;
+        $this->AdldapService = $AdldapService;
         $config = $Container->getParameter('ztec.security.active_directory.settings');
         if (isset($config['username_patterns']) && is_array($config['username_patterns'])) {
             foreach ($config['username_patterns'] as $pat) {
@@ -44,7 +46,7 @@ class adUserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
 
-        $user = new adUser($this->getUsernameFromString($username),'42',array());
+        $user = new adUser($this->getUsernameFromString($username), '42', array());
         return $user;
         //throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
     }
@@ -59,7 +61,7 @@ class adUserProvider implements UserProviderInterface
             }
         }
         $username = strtolower($username);
-        /*echo $username ;*/
+        /*echo $username;*/
         if (preg_match('/^[a-z0-9-.]+$/i', $username) == true) {
             /* echo 'ok';
              exit();*/
@@ -96,11 +98,16 @@ class adUserProvider implements UserProviderInterface
     }
 
 
-    public function fetchData(adUser $adUser, adLDAP $adLdap){
+    public function fetchData(adUser $adUser, adLDAP $adLdap)
+    {
         $connected = $adLdap->connect();
-        $isAD = $adLdap->authenticate($adUser->getUsername(),$adUser->getPassword());
-        if(!$isAD || !$connected){
-            throw new \Exception('Active directory dit not respond well '.var_export($isAD,1). ' - '.var_export($connected,1));
+        $isAD = $adLdap->authenticate($adUser->getUsername(), $adUser->getPassword());
+        if (!$isAD || !$connected) {
+            throw new \Exception(
+                'Active directory dit not respond well ' .
+                var_export($isAD, 1) . ' - ' .
+                var_export($connected, 1)
+            );
         }
         $user = $adLdap->user()->infoCollection($adUser->getUsername());
         //$userInfo = $adLdap->user_info($this->username);
@@ -111,13 +118,13 @@ class adUserProvider implements UserProviderInterface
 
             if ($this->recursiveGrouproles == true) {
                 // get recursive groups via adLdap
-                $groups = $adLdap->user()->groups($adUser->getUsername(),true);
+                $groups = $adLdap->user()->groups($adUser->getUsername(), true);
             } else {
-                foreach($user->memberOf as $k=>$group){
-                    if($k !== 'count' && $group){
-                        $reg = '#CN=([^,]*)#' ;
-                        preg_match_all($reg,$group,$out);
-                        $groups[] = $out[1][0] ;
+                foreach ($user->memberOf as $k => $group) {
+                    if ($k !== 'count' && $group) {
+                        $reg = '#CN=([^,]*)#';
+                        preg_match_all($reg, $group, $out);
+                        $groups[] = $out[1][0];
                         /* if(array_key_exists($out[1][0],$allGroups)){
                              $groups[$out[1][0]] = $allGroups[$out[1][0]];
                          }*/
@@ -128,11 +135,11 @@ class adUserProvider implements UserProviderInterface
 
             $roles = array('USER','Domain_users');
             $sfRoles = array();
-            foreach($groups as $r){
-                $sfRoles[] = 'ROLE_'.strtoupper(str_replace(' ','_',$r));
+            foreach ($groups as $r) {
+                $sfRoles[] = 'ROLE_' . strtoupper(str_replace(' ', '_', $r));
             }
             $adUser->setRoles($sfRoles);
-            return TRUE ;
+            return true;
         }
     }
 
