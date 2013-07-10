@@ -69,7 +69,7 @@ You need to add security parameters
 Useful information
 ----------------------
 
-Roles are got from Active directory. The name is transform to match the ROLE system of Symfony2
+Roles are got from Active directory. The name is transformed to match the ROLE system of Symfony2
 
     Domain User => ROLE_DOMAIN_USER
     Administrators = ROLE_ADMINISTRATORS
