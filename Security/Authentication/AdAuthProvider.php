@@ -8,6 +8,7 @@ use Ztec\Security\ActiveDirectoryBundle\Security\User\adUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
@@ -18,12 +19,20 @@ class AdAuthProvider implements AuthenticationProviderInterface
      * @var \Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider
      */
     private $userProvider;
+    private $messageBadCredentials = 'The credentials are wrong';
 
-    public function __construct(adUserProvider $userProvider, $config, AdldapService $AdldapService)
+    public function __construct(adUserProvider $userProvider, $config, AdldapService $AdldapService, ContainerInterface $Container)
     {
         $this->userProvider = $userProvider;
         $this->config = $config;
         $this->AdldapService = $AdldapService;
+
+        $this->container = $Container;
+        $settings = $Container->getParameter('ztec.security.active_directory.settings');
+
+        if (isset($settings['message_bad_credentials'])) {
+            $this->messageBadCredentials = $settings['message_bad_credentials'];
+        }
     }
 
     /**
@@ -41,7 +50,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
         $User = $this->userProvider->loadUserByUsername($token->getUsername());
         if ($User instanceof adUser) {
             if (!$Adldap->authenticate($User->getUsername(), $token->getCredentials())) {
-                throw new BadCredentialsException('The credentials are wrong');
+                throw new BadCredentialsException($this->messageBadCredentials);
             }
             $User->setPassword($token->getCredentials());
             $this->userProvider->fetchData($User, $Adldap);

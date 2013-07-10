@@ -49,6 +49,9 @@ You need to configure your domain specific information
               - /RIPER\\(.*)/i #like RIPER\toto
               - /RIPER.FR\\(.*)/i #like RIEPER.FR\toto
               - /(.*)/i #like toto
+            username_validation_pattern: /^[a-z0-9-.]+$/i #optional: regex to check the form of the user name before auth
+            message_invalid_user: Invalid user name
+            message_bad_credentials: The credentials are wrong
 
 You need to add security parameters
 
