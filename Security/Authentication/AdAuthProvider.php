@@ -1,26 +1,29 @@
 <?php
-namespace Ztec\Security\ActiveDirectoryBundle\Security\Authentication ;
 
-use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface ;
-use Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider ;
-use Ztec\Security\ActiveDirectoryBundle\Security\User\adUser ;
+namespace Ztec\Security\ActiveDirectoryBundle\Security\Authentication;
+
+use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
+use Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider;
+use Ztec\Security\ActiveDirectoryBundle\Security\User\adUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException ;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService ;
+use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
-class AdAuthProvider implements AuthenticationProviderInterface{
+class AdAuthProvider implements AuthenticationProviderInterface
+{
 
     /**
      * @var \Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider
      */
-    private $userProvider ;
+    private $userProvider;
 
-    public function __construct(adUserProvider $userProvider,$config, AdldapService $AdldapService){
-        $this->userProvider = $userProvider ;
-        $this->config = $config ;
-        $this->AdldapService = $AdldapService ;
+    public function __construct(adUserProvider $userProvider, $config, AdldapService $AdldapService)
+    {
+        $this->userProvider = $userProvider;
+        $this->config = $config;
+        $this->AdldapService = $AdldapService;
     }
 
     /**
@@ -36,17 +39,22 @@ class AdAuthProvider implements AuthenticationProviderInterface{
     {
         $Adldap = $this->AdldapService->getInstance();
         $User = $this->userProvider->loadUserByUsername($token->getUsername());
-        if($User instanceof adUser){
-            if(!$Adldap->authenticate($User->getUsername(),$token->getCredentials())){
+        if ($User instanceof adUser) {
+            if (!$Adldap->authenticate($User->getUsername(), $token->getCredentials())) {
                 throw new BadCredentialsException('The credentials are wrong');
             }
             $User->setPassword($token->getCredentials());
-            $this->userProvider->fetchData($User,$Adldap);
+            $this->userProvider->fetchData($User, $Adldap);
         }
 
-        $newToken = new UsernamePasswordToken($User, $token->getCredentials(), "ztec.security.active.directory.user.provider", $User->getRoles()) ;
+        $newToken = new UsernamePasswordToken(
+            $User,
+            $token->getCredentials(),
+            "ztec.security.active.directory.user.provider",
+            $User->getRoles()
+        );
 
-        return $newToken ;
+        return $newToken;
     }
 
     /**
@@ -56,8 +64,8 @@ class AdAuthProvider implements AuthenticationProviderInterface{
      *
      * @return Boolean true if the implementation supports the Token, false otherwise
      */
-    function supports(TokenInterface $token)
+    public function supports(TokenInterface $token)
     {
-        return $token instanceof UsernamePasswordToken ;
+        return $token instanceof UsernamePasswordToken;
     }
 }

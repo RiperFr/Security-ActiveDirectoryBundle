@@ -1,5 +1,6 @@
 <?php
-namespace Ztec\Security\ActiveDirectoryBundle\Security\User ;
+
+namespace Ztec\Security\ActiveDirectoryBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -12,12 +13,12 @@ class adUser implements UserInterface
     private $roles;
 
 
-    public function __construct($username,$password,array $roles)
+    public function __construct($username, $password, array $roles)
     {
         $this->username = $username;
-        $this->password = $password ;
+        $this->password = $password;
         $this->salt = '';
-        $this->roles = $roles ;
+        $this->roles = $roles;
     }
 
     /**
@@ -33,8 +34,9 @@ class adUser implements UserInterface
         return $this->password;
     }
 
-    public function setPassword($password){
-        $this->password = $password ;
+    public function setPassword($password)
+    {
+        $this->password = $password;
     }
 
     /**
@@ -46,7 +48,7 @@ class adUser implements UserInterface
      */
     public function getSalt()
     {
-        return null ;
+        return null;
     }
 
     /**
@@ -69,7 +71,7 @@ class adUser implements UserInterface
      */
     public function eraseCredentials()
     {
-        //return void ;
+        //return void;
     }
 
     /**
@@ -90,14 +92,11 @@ class adUser implements UserInterface
      */
     public function getRoles()
     {
-        return  $this->roles ;
+        return  $this->roles;
     }
 
-    public function setRoles(array $roles){
-        $this->roles = $roles ;
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
     }
-
-
-
-
 }
