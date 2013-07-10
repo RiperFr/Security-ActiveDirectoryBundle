@@ -13,18 +13,30 @@ use adLDAP\adLDAP;
 class adUserProvider implements UserProviderInterface
 {
     private $usernamePatterns = array();
+    private $usernameValidationPattern = '/^[a-z0-9-.]+$/i';
+    private $recursiveGrouproles = false;
+    private $messageInvalidUser = 'Invalid user name';
+
     public function __construct(ContainerInterface $Container, AdldapService $AdldapService)
     {
-        $this->container = $Container;
         $this->AdldapService = $AdldapService;
-        $config = $Container->getParameter('ztec.security.active_directory.settings');
-        if (isset($config['username_patterns']) && is_array($config['username_patterns'])) {
-            foreach ($config['username_patterns'] as $pat) {
+
+        $this->container = $Container;
+        $settings = $Container->getParameter('ztec.security.active_directory.settings');
+
+        if (isset($settings['username_patterns']) && is_array($settings['username_patterns'])) {
+            foreach ($settings['username_patterns'] as $pat) {
                 array_push($this->usernamePatterns, $pat);
             }
         }
-        if (isset($config['recursive_grouproles']) && $config['recursive_grouproles'] == true) {
+        if (isset($settings['username_validation_pattern'])) {
+            $this->usernameValidationPattern = $settings['username_validation_pattern'];
+        }
+        if (isset($settings['recursive_grouproles']) && $settings['recursive_grouproles'] == true) {
             $this->recursiveGrouproles = true;
+        }
+        if (isset($settings['message_invalid_user'])) {
+            $this->messageInvalidUser = $settings['message_invalid_user'];
         }
     }
 
@@ -45,10 +57,11 @@ class adUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-
-        $user = new adUser($this->getUsernameFromString($username), '42', array());
-        return $user;
-        //throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
+        $userString = $this->getUsernameFromString($username);
+        if ($userString === null) {
+            throw new UsernameNotFoundException($this->messageInvalidUser);
+        }
+        return new adUser($this->getUsernameFromString($userString), '42', array());
     }
 
     public function getUsernameFromString($string)
@@ -61,15 +74,11 @@ class adUserProvider implements UserProviderInterface
             }
         }
         $username = strtolower($username);
-        /*echo $username;*/
-        if (preg_match('/^[a-z0-9-.]+$/i', $username) == true) {
-            /* echo 'ok';
-             exit();*/
+        if (preg_match($this->usernameValidationPattern, $username) == true) {
             return $username;
+        } else {
+            return null;
         }
-        /*echo 'bad';
-        exit();*/
-        throw new \InvalidArgumentException('The username does not match any rules');
     }
 
     /**
@@ -104,7 +113,7 @@ class adUserProvider implements UserProviderInterface
         $isAD = $adLdap->authenticate($adUser->getUsername(), $adUser->getPassword());
         if (!$isAD || !$connected) {
             throw new \Exception(
-                'Active directory dit not respond well ' .
+                'Active directory did not respond well ' .
                 var_export($isAD, 1) . ' - ' .
                 var_export($connected, 1)
             );
