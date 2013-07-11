@@ -1,0 +1,5 @@
+ztec.security.active_directory.invalid_user: "Le login est invalid : \"%reason%\" "
+ztec.security.active_directory.wrong_credential: "Identifiants erronés"
+ztec.security.active_directory.username_not_matching_rules: "Le login \"%username%\" ne correspond à aucune règle"
+ztec.security.active_directory.ad.bad_response: "L'Active Directory ne repond pas : %connexion_status% - %is_AD%"
+ztec.security.active_directory.bad_isntance: "Les instance \"%class_name%\" ne sont pas suportées"

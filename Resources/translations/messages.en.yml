@@ -1,0 +1,5 @@
+ztec.security.active_directory.invalid_user: "The username is not valid : \"%reason%\" "
+ztec.security.active_directory.wrong_credential: "Wrong credential"
+ztec.security.active_directory.username_not_matching_rules: "The username \"%username%\" does not match rules"
+ztec.security.active_directory.ad.bad_response: "The Active Directory did not repsond well : %connexion_status% - %is_AD%"
+ztec.security.active_directory.bad_isntance: "Instance of \"%class_name%\" is not suported."
