@@ -1,7 +1,7 @@
 {
     "name": "ztec/security-active_directory",
     "type": "symfony-bundle",
-    "description": "This is a bundle to allow authentication into symfony2.1 by an Active directory",
+    "description": "This is a bundle to allow authentication into symfony >= 2.1 by an Active directory",
     "keywords": ["active directory","ldap","symfony","bundle"],
     "homepage": "https://github.com/ztec/security-active_directory",
     "license": "CC-BY",
