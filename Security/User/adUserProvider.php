@@ -4,6 +4,7 @@ namespace Ztec\Security\ActiveDirectoryBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -137,25 +138,22 @@ class adUserProvider implements UserProviderInterface
     {
         if (!$user instanceof adUser) {
             $msg = $this->translator->trans(
-                'ztec.security.active_directory.bad_isntance',
+                'ztec.security.active_directory.bad_instance',
                 array(
                     '%class_name%' => get_class($user)
                 )
             );
             throw new UnsupportedUserException($msg);
         }
-        $newUser = $this->loadUserByUsername($user->getUsername());
-        $newUser->setPassword($user->getPassword()); //we reset the password
-        $newUser->setRoles($user->getRoles());
 
-        return $newUser;
+        return $user;
     }
 
 
-    public function fetchData(adUser $adUser, adLDAP $adLdap)
+    public function fetchData(adUser $adUser, TokenInterface $token, adLDAP $adLdap)
     {
         $connected = $adLdap->connect();
-        $isAD      = $adLdap->authenticate($adUser->getUsername(), $adUser->getPassword());
+        $isAD      = $adLdap->authenticate($adUser->getUsername(), $token->getCredentials());
         if (!$isAD || !$connected) {
             $msg = $this->translator->trans(
                 'ztec.security.active_directory.ad.bad_response',
