@@ -190,10 +190,15 @@ class adUserProvider implements UserProviderInterface
     }*/
             /** End Fetching */
             $sfRoles = array();
+            $sfRolesTemp = array();
             foreach ($groups as $r) {
-                $sfRoles[] = 'ROLE_' . strtoupper(str_replace(' ', '_', $r));
+                if (in_array($r, $sfRolesTemp) === false) {
+                    $sfRoles[] = 'ROLE_' . strtoupper(str_replace(' ', '_', $r));
+                    $sfRolesTemp[] = $r;
+                }
             }
             $adUser->setRoles($sfRoles);
+            unset($sfRolesTemp);
 
             return true;
         }
