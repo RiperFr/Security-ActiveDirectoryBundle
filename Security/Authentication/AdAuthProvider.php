@@ -56,8 +56,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
                 ); //'The credentials are wrong'
                 throw new BadCredentialsException($msg);
             }
-            $User->setPassword($token->getCredentials());
-            $this->userProvider->fetchData($User, $Adldap);
+            $this->userProvider->fetchData($User, $token, $Adldap);
         }
 
         $newToken = new UsernamePasswordToken(
