@@ -35,9 +35,9 @@ You need to configure your domain specific information
         ztec.security.active_directory.settings:
             account_suffix : riper.fr # without the @ at the beginning
             base_dn : DC=RIPER,DC=FR #The DN of the domain
-            domain_controllers : [ baudrive.kim.riper.fr ] #Servers to use for ldap connexion (Random)
-            admin_username: #Null to use the userConnexion
-            admin_password: #Null to use the userConnexion
+            domain_controllers : [ baudrive.kim.riper.fr ] #Servers to use for ldap connection (Random)
+            admin_username: #Null to use the userConnection
+            admin_password: #Null to use the userConnection
             real_primarygroup : true #For Linux compatibility.
             use_ssl : false #Set it true need configuration of the server to be usefull
             use_tls : false #Set it true need configuration of the server to be usefull
@@ -60,7 +60,7 @@ You need to add security parameters
 
     firewalls:
         secured_area:
-            active_directory: #Sames parameters as form_login
+            active_directory: #Replace the 'form_login' line with this
                     check_path: /demo/secured/login_check
                     login_path: /demo/secured/login
 

@@ -158,8 +158,8 @@ class adUserProvider implements UserProviderInterface
             $msg = $this->translator->trans(
                 'ztec.security.active_directory.ad.bad_response',
                 array(
-                    '%connexion_status%' => var_export($connected, 1),
-                    '%is_AD%'            => var_export($isAD, 1),
+                    '%connection_status%' => var_export($connected, 1),
+                    '%is_AD%'             => var_export($isAD, 1),
                 )
             );
             throw new \Exception(
