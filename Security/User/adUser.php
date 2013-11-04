@@ -6,12 +6,23 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class adUser implements UserInterface
 {
-
+    /** @var string */
     private $username;
+
+    /** @var string */
     private $password;
+
+    /** @var string */
     private $salt;
+
+    /** @var string */
     private $roles;
 
+    /** @var string */
+    private $displayName;
+
+    /** @var string */
+    private $email;
 
     public function __construct($username, $password, array $roles)
     {
@@ -59,6 +70,42 @@ class adUser implements UserInterface
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * Returns the display name of the authenticated user.
+     *
+     * @return string
+     */
+    public function getDisplayName() {
+        return $this->displayName;
+    }
+
+    /**
+     * Set the display name of the authenticated user.
+     *
+     * @param string $displayName
+     */
+    public function setDisplayName($displayName) {
+        $this->displayName = $displayName;
+    }
+
+    /**
+     * Returns the email address of the authenticated user.
+     *
+     * @return string
+     */
+    public function getEmail() {
+        return $this->email;
+    }
+
+    /**
+     * Set the email address of the authenticated user.
+     *
+     * @param string $email
+     */
+    public function setEmail($email) {
+        $this->email = $email;
     }
 
     /**

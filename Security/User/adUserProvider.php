@@ -2,6 +2,7 @@
 
 namespace Ztec\Security\ActiveDirectoryBundle\Security\User;
 
+use adLDAP\collections\adLDAPUserCollection;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -166,6 +167,7 @@ class adUserProvider implements UserProviderInterface
                 $msg
             );
         }
+        /** @var adLDAPUserCollection $user */
         $user = $adLdap->user()->infoCollection($adUser->getUsername());
         //$userInfo = $adLdap->user_info($this->username);
 
@@ -200,6 +202,9 @@ class adUserProvider implements UserProviderInterface
             $adUser->setRoles($sfRoles);
             unset($sfRolesTemp);
 
+            $adUser->setDisplayName($user->displayName);
+            $adUser->setEmail($user->mail);
+            
             return true;
         }
     }
