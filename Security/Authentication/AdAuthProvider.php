@@ -28,12 +28,14 @@ class AdAuthProvider implements AuthenticationProviderInterface
         adUserProvider $userProvider,
         array $config,
         AdldapService $AdldapService,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        $tokenClass
     ) {
         $this->userProvider  = $userProvider;
         $this->config        = $config;
         $this->AdldapService = $AdldapService;
         $this->translator    = $translator;
+        $this->tokenClass    = $tokenClass;
     }
 
     /**
@@ -59,7 +61,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
             $this->userProvider->fetchData($User, $token, $Adldap);
         }
 
-        $newToken = new UsernamePasswordToken(
+        $newToken = new $this->tokenClass(
             $User,
             $token->getCredentials(),
             "ztec.security.active.directory.user.provider",
