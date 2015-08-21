@@ -3,7 +3,6 @@
 namespace Ztec\Security\ActiveDirectoryBundle\Service;
 
 use adLDAP\adLDAP;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdldapService
 {
@@ -13,20 +12,29 @@ class AdldapService
     private $adLdap;
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container  Dependency injection
+     * @var array The Active Directory parameters (see ztec.security.active_directory.settings)
+     */
+    private $parameters;
+
+    /**
+     * Constructor for the service.
+     *
+     * @param array $parameters Active Directory parameters
      */
     public function __construct(array $parameters)
     {
         $parameters['account_suffix'] = '@' . $parameters['account_suffix'];
-        $this->paramerters            = $parameters;
+        $this->parameters = $parameters;
     }
 
     /**
+     * Returns an adLDAP instance.
+     *
      * @return adLDAP The instance of the adLdap (lib)
      */
     public function getInstance()
     {
-        $this->adLdap = new adLDAP($this->paramerters);
+        $this->adLdap = new adLDAP($this->parameters);
 
         return $this->adLdap;
     }

@@ -3,22 +3,22 @@
 namespace Ztec\Security\ActiveDirectoryBundle\Security\Authentication;
 
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Ztec\Security\ActiveDirectoryBundle\Security\User\AdUserProvider;
 use Ztec\Security\ActiveDirectoryBundle\Security\User\AdUser;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class AdAuthProvider implements AuthenticationProviderInterface
 {
-
     /**
-     * @var \Ztec\Security\ActiveDirectoryBundle\Security\User\AdUserProvider
+     * @var AdUserProvider
      */
     private $userProvider;
+
     /**
      * @var TranslatorInterface
      */
@@ -64,7 +64,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
         $newToken = new $this->tokenClass(
             $User,
             $token->getCredentials(),
-            "ztec.security.active.directory.user.provider",
+            'ztec.security.active.directory.user.provider',
             $User->getRoles()
         );
 
