@@ -1,18 +1,15 @@
 parameters:
-    ztec_security_active_directory_user_provider.class: Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider
-    ztec_security_active_directory_authentication_provider.class: Ztec\Security\ActiveDirectoryBundle\Security\Authentication\AdAuthProvider
-    ztec_security_active_directory_service_adldap.class: Ztec\Security\ActiveDirectoryBundle\Service\AdldapService
     ztec_security_active_directory_token: Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+
 services:
     ztec.security.active.directory.user.provider:
-        class: "%ztec_security_active_directory_user_provider.class%"
-        arguments: [ "%ztec.security.active_directory.settings%", "@ztec.security.active.directory.service.adldap", "@translator"]
+        class: "Ztec\Security\ActiveDirectoryBundle\Security\User\AdUserProvider"
+        arguments: ["%ztec.security.active_directory.settings%", "@ztec.security.active.directory.service.adldap", "@translator"]
 
     ztec.security.active.directory.authentication.provider:
-        class: "%ztec_security_active_directory_authentication_provider.class%"
-        arguments: [ "@ztec.security.active.directory.user.provider", "", "@ztec.security.active.directory.service.adldap", "@translator", "%ztec_security_active_directory_token%"]
+        class: "Ztec\Security\ActiveDirectoryBundle\Security\Authentication\AdAuthProvider"
+        arguments: ["@ztec.security.active.directory.user.provider", "", "@ztec.security.active.directory.service.adldap", "@translator", "%ztec_security_active_directory_token%"]
 
     ztec.security.active.directory.service.adldap:
-        class: "%ztec_security_active_directory_service_adldap.class%"
-        arguments: [ "%ztec.security.active_directory.settings%" ]
-
+        class: "Ztec\Security\ActiveDirectoryBundle\Service\AdldapService"
+        arguments: [ "%ztec.security.active_directory.settings%"]

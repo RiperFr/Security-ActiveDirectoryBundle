@@ -2,6 +2,7 @@
 
 namespace Ztec\Security\ActiveDirectoryBundle\Security\User;
 
+use adLDAP\adLDAP;
 use adLDAP\collections\adLDAPUserCollection;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -10,15 +11,14 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
-use adLDAP\adLDAP;
 
-class adUserProvider implements UserProviderInterface
+class AdUserProvider implements UserProviderInterface
 {
     private $usernamePatterns = array();
     private $recursiveGrouproles = false;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -34,15 +34,14 @@ class adUserProvider implements UserProviderInterface
         foreach ($username_patterns as $pat) {
             array_push($this->usernamePatterns, $pat);
         }
-
-
     }
 
-
     /**
-     * retrive a configuration value. make all required test.
-     * @param $name
-     * @param $default
+     * Retrieves a configuration value. make all required test.
+     *
+     * @param string $name Key name
+     * @param mixed $default Default value
+     *
      * @return mixed
      */
     protected function getConfig($name, $default)
@@ -64,7 +63,7 @@ class adUserProvider implements UserProviderInterface
      *
      * @param string $username The username
      *
-     * @return adUser
+     * @return AdUser
      *
      * @see UsernameNotFoundException
      *
@@ -76,10 +75,11 @@ class adUserProvider implements UserProviderInterface
         // The password is set to something impossible to find.
         try {
             $userString = $this->getUsernameFromString($username);
-            $user       = new adUser($this->getUsernameFromString($userString), uniqid(true) . rand(
-                    0,
-                    424242
-                ), array());
+            $user = new AdUser(
+                $this->getUsernameFromString($userString),
+                uniqid(true) . rand(0, 424242),
+                array()
+            );
         } catch (\InvalidArgumentException $e) {
             $msg = $this->translator->trans(
                 'ztec.security.active_directory.invalid_user',
@@ -93,8 +93,12 @@ class adUserProvider implements UserProviderInterface
 
 
     /**
-     * @param $string
+     * Retrieves the username from the login name, it is transformed using the username patterns.
+     *
+     * @param string $string
+     *
      * @return string
+     *
      * @throws \InvalidArgumentException
      */
     public function getUsernameFromString($string)
@@ -107,19 +111,18 @@ class adUserProvider implements UserProviderInterface
             }
         }
         $username = strtolower($username);
-        $patern   = $this->getConfig('username_validation_pattern', '/^[a-z0-9-.]+$/i');
-        if (preg_match($patern, $username) == true) {
+        $pattern   = $this->getConfig('username_validation_pattern', '/^[a-z0-9-.]+$/i');
+        if (preg_match($pattern, $username)) {
             return $username;
         }
-        {
-            $msg = $this->translator->trans(
-                'ztec.security.active_directory.username_not_matching_rules',
-                array(
-                    '%username%' => $username
-                )
-            );
-            throw new \InvalidArgumentException($msg);
-        }
+
+        $msg = $this->translator->trans(
+            'ztec.security.active_directory.username_not_matching_rules',
+            array(
+                '%username%' => $username
+            )
+        );
+        throw new \InvalidArgumentException($msg);
     }
 
     /**
@@ -129,6 +132,7 @@ class adUserProvider implements UserProviderInterface
      * totally reloaded (e.g. from the database), or if the UserInterface
      * object can just be merged into some internal array of users / identity
      * map.
+     *
      * @param UserInterface $user
      *
      * @return UserInterface
@@ -137,7 +141,7 @@ class adUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!$user instanceof adUser) {
+        if (!$user instanceof AdUser) {
             $msg = $this->translator->trans(
                 'ztec.security.active_directory.bad_instance',
                 array(
@@ -150,8 +154,14 @@ class adUserProvider implements UserProviderInterface
         return $user;
     }
 
-
-    public function fetchData(adUser $adUser, TokenInterface $token, adLDAP $adLdap)
+    /**
+     * Fetches the user data via adLDAP and stores it in the provided $adUser.
+     *
+     * @param AdUser $adUser
+     * @param TokenInterface $token
+     * @param adLDAP $adLdap
+     */
+    public function fetchData(AdUser $adUser, TokenInterface $token, adLDAP $adLdap)
     {
         $connected = $adLdap->connect();
         $isAD      = $adLdap->authenticate($adUser->getUsername(), $token->getCredentials());
@@ -184,12 +194,12 @@ class adUserProvider implements UserProviderInterface
                         $reg = '#CN=([^,]*)#';
                         preg_match_all($reg, $group, $out);
                         $groups[] = $out[1][0];
-                        /* if(array_key_exists($out[1][0],$allGroups)){
+                        /*if(array_key_exists($out[1][0],$allGroups)){
                              $groups[$out[1][0]] = $allGroups[$out[1][0]];
                          }*/
-            /*}
-        }
-    }*/
+                    /*}
+                }
+            }*/
             /** End Fetching */
             $sfRoles = array();
             $sfRolesTemp = array();
@@ -204,7 +214,7 @@ class adUserProvider implements UserProviderInterface
 
             $adUser->setDisplayName($user->displayName);
             $adUser->setEmail($user->mail);
-            
+
             return true;
         }
     }
@@ -218,6 +228,6 @@ class adUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'Ztec\Security\ActiveDirectoryBundle\Security\User\adUser';
+        return $class === 'Ztec\Security\ActiveDirectoryBundle\Security\User\AdUser';
     }
 }

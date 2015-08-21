@@ -2,13 +2,13 @@
 
 namespace Ztec\Security\ActiveDirectoryBundle\Security\Factory;
 
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FormLoginFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FormLoginFactory;
 
 class AdAuthFactory extends FormLoginFactory
 {
@@ -32,7 +32,6 @@ class AdAuthFactory extends FormLoginFactory
      */
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
-
         $providerId = 'security.authentication.provider.ztec.active_directory.' . $id;
         $container
             ->setDefinition(
@@ -42,13 +41,8 @@ class AdAuthFactory extends FormLoginFactory
             ->replaceArgument(0, new Reference("ztec.security.active.directory.user.provider"))
             ->replaceArgument(1, $config);
 
-        //exit();
         return $providerId;
     }
-
-    /*public function getListenerId(){
-        return
-    }*/
 
     public function getKey()
     {

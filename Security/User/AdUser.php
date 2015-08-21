@@ -4,7 +4,7 @@ namespace Ztec\Security\ActiveDirectoryBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class adUser implements UserInterface
+class AdUser implements UserInterface
 {
     /** @var string */
     private $username;
@@ -45,6 +45,13 @@ class adUser implements UserInterface
         return $this->password;
     }
 
+    /**
+     * Sets the password used to authenticate the user.
+     *
+     * This should be the encoded password.
+     *
+     * @param string $password
+     */
     public function setPassword($password)
     {
         $this->password = $password;
@@ -77,7 +84,8 @@ class adUser implements UserInterface
      *
      * @return string
      */
-    public function getDisplayName() {
+    public function getDisplayName()
+    {
         return $this->displayName;
     }
 
@@ -86,7 +94,8 @@ class adUser implements UserInterface
      *
      * @param string $displayName
      */
-    public function setDisplayName($displayName) {
+    public function setDisplayName($displayName)
+    {
         $this->displayName = $displayName;
     }
 
@@ -95,7 +104,8 @@ class adUser implements UserInterface
      *
      * @return string
      */
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
@@ -104,7 +114,8 @@ class adUser implements UserInterface
      *
      * @param string $email
      */
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         $this->email = $email;
     }
 
@@ -142,6 +153,11 @@ class adUser implements UserInterface
         return  $this->roles;
     }
 
+    /**
+     * Sets the roles for the user.
+     *
+     * @param array $roles
+     */
     public function setRoles(array $roles)
     {
         $this->roles = $roles;

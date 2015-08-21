@@ -3,29 +3,29 @@
 namespace Ztec\Security\ActiveDirectoryBundle\Security\Authentication;
 
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider;
-use Ztec\Security\ActiveDirectoryBundle\Security\User\adUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Translation\TranslatorInterface;
+use Ztec\Security\ActiveDirectoryBundle\Security\User\AdUserProvider;
+use Ztec\Security\ActiveDirectoryBundle\Security\User\AdUser;
+use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
 
 class AdAuthProvider implements AuthenticationProviderInterface
 {
-
     /**
-     * @var \Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider
+     * @var AdUserProvider
      */
     private $userProvider;
+
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
     public function __construct(
-        adUserProvider $userProvider,
+        AdUserProvider $userProvider,
         array $config,
         AdldapService $AdldapService,
         TranslatorInterface $translator,
@@ -51,7 +51,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
     {
         $Adldap = $this->AdldapService->getInstance();
         $User   = $this->userProvider->loadUserByUsername($token->getUsername());
-        if ($User instanceof adUser) {
+        if ($User instanceof AdUser) {
             if (!$Adldap->authenticate($User->getUsername(), $token->getCredentials())) {
                 $msg = $this->translator->trans(
                     'ztec.security.active_directory.wrong_credential'
@@ -64,7 +64,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
         $newToken = new $this->tokenClass(
             $User,
             $token->getCredentials(),
-            "ztec.security.active.directory.user.provider",
+            'ztec.security.active.directory.user.provider',
             $User->getRoles()
         );
 
