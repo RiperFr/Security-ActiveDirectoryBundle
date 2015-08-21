@@ -3,7 +3,7 @@ parameters:
 
 services:
     ztec.security.active.directory.user.provider:
-        class: "Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider%"
+        class: "Ztec\Security\ActiveDirectoryBundle\Security\User\AdUserProvider"
         arguments: ["%ztec.security.active_directory.settings%", "@ztec.security.active.directory.service.adldap", "@translator"]
 
     ztec.security.active.directory.authentication.provider:

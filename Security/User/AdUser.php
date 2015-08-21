@@ -4,7 +4,7 @@ namespace Ztec\Security\ActiveDirectoryBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class adUser implements UserInterface
+class AdUser implements UserInterface
 {
     /** @var string */
     private $username;

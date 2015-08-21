@@ -4,8 +4,8 @@ namespace Ztec\Security\ActiveDirectoryBundle\Security\Authentication;
 
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider;
-use Ztec\Security\ActiveDirectoryBundle\Security\User\adUser;
+use Ztec\Security\ActiveDirectoryBundle\Security\User\AdUserProvider;
+use Ztec\Security\ActiveDirectoryBundle\Security\User\AdUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -16,7 +16,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
 {
 
     /**
-     * @var \Ztec\Security\ActiveDirectoryBundle\Security\User\adUserProvider
+     * @var \Ztec\Security\ActiveDirectoryBundle\Security\User\AdUserProvider
      */
     private $userProvider;
     /**
@@ -25,7 +25,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
     private $translator;
 
     public function __construct(
-        adUserProvider $userProvider,
+        AdUserProvider $userProvider,
         array $config,
         AdldapService $AdldapService,
         TranslatorInterface $translator,
@@ -51,7 +51,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
     {
         $Adldap = $this->AdldapService->getInstance();
         $User   = $this->userProvider->loadUserByUsername($token->getUsername());
-        if ($User instanceof adUser) {
+        if ($User instanceof AdUser) {
             if (!$Adldap->authenticate($User->getUsername(), $token->getCredentials())) {
                 $msg = $this->translator->trans(
                     'ztec.security.active_directory.wrong_credential'

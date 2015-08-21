@@ -12,7 +12,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
 use adLDAP\adLDAP;
 
-class adUserProvider implements UserProviderInterface
+class AdUserProvider implements UserProviderInterface
 {
     private $usernamePatterns = array();
     private $recursiveGrouproles = false;
@@ -64,7 +64,7 @@ class adUserProvider implements UserProviderInterface
      *
      * @param string $username The username
      *
-     * @return adUser
+     * @return AdUser
      *
      * @see UsernameNotFoundException
      *
@@ -76,7 +76,7 @@ class adUserProvider implements UserProviderInterface
         // The password is set to something impossible to find.
         try {
             $userString = $this->getUsernameFromString($username);
-            $user       = new adUser($this->getUsernameFromString($userString), uniqid(true) . rand(
+            $user       = new AdUser($this->getUsernameFromString($userString), uniqid(true) . rand(
                     0,
                     424242
                 ), array());
@@ -137,7 +137,7 @@ class adUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!$user instanceof adUser) {
+        if (!$user instanceof AdUser) {
             $msg = $this->translator->trans(
                 'ztec.security.active_directory.bad_instance',
                 array(
@@ -151,7 +151,7 @@ class adUserProvider implements UserProviderInterface
     }
 
 
-    public function fetchData(adUser $adUser, TokenInterface $token, adLDAP $adLdap)
+    public function fetchData(AdUser $adUser, TokenInterface $token, adLDAP $adLdap)
     {
         $connected = $adLdap->connect();
         $isAD      = $adLdap->authenticate($adUser->getUsername(), $token->getCredentials());
@@ -204,7 +204,7 @@ class adUserProvider implements UserProviderInterface
 
             $adUser->setDisplayName($user->displayName);
             $adUser->setEmail($user->mail);
-            
+
             return true;
         }
     }
@@ -218,6 +218,6 @@ class adUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'Ztec\Security\ActiveDirectoryBundle\Security\User\adUser';
+        return $class === 'Ztec\Security\ActiveDirectoryBundle\Security\User\AdUser';
     }
 }
