@@ -1,12 +1,12 @@
 <?php
 
-namespace Ztec\Security\ActiveDirectoryBundle;
+namespace Riper\Security\ActiveDirectoryBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Ztec\Security\ActiveDirectoryBundle\Security\Factory\AdAuthFactory;
+use Riper\Security\ActiveDirectoryBundle\Security\Factory\AdAuthFactory;
 
-class ZtecSecurityActiveDirectoryBundle extends Bundle
+class RiperActiveDirectoryBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {

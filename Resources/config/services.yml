@@ -1,15 +1,15 @@
 parameters:
-    ztec_security_active_directory_token: Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
+    riper_security_active_directory_token: Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken
 
 services:
-    ztec.security.active.directory.user.provider:
-        class: "Ztec\Security\ActiveDirectoryBundle\Security\User\AdUserProvider"
-        arguments: ["%ztec.security.active_directory.settings%", "@ztec.security.active.directory.service.adldap", "@translator"]
+    riper.security.active.directory.user.provider:
+        class: "Riper\Security\ActiveDirectoryBundle\Security\User\AdUserProvider"
+        arguments: ["%riper.security.active_directory.settings%", "@riper.security.active.directory.service.adldap", "@translator"]
 
-    ztec.security.active.directory.authentication.provider:
-        class: "Ztec\Security\ActiveDirectoryBundle\Security\Authentication\AdAuthProvider"
-        arguments: ["@ztec.security.active.directory.user.provider", "", "@ztec.security.active.directory.service.adldap", "@translator", "%ztec_security_active_directory_token%"]
+    riper.security.active.directory.authentication.provider:
+        class: "Riper\Security\ActiveDirectoryBundle\Security\Authentication\AdAuthProvider"
+        arguments: ["@riper.security.active.directory.user.provider", "", "@riper.security.active.directory.service.adldap", "@translator", "%riper_security_active_directory_token%"]
 
-    ztec.security.active.directory.service.adldap:
-        class: "Ztec\Security\ActiveDirectoryBundle\Service\AdldapService"
-        arguments: [ "%ztec.security.active_directory.settings%"]
+    riper.security.active.directory.service.adldap:
+        class: "Riper\Security\ActiveDirectoryBundle\Service\AdldapService"
+        arguments: [ "%riper.security.active_directory.settings%"]

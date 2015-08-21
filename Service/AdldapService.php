@@ -1,6 +1,6 @@
 <?php
 
-namespace Ztec\Security\ActiveDirectoryBundle\Service;
+namespace Riper\Security\ActiveDirectoryBundle\Service;
 
 use adLDAP\adLDAP;
 
@@ -12,7 +12,7 @@ class AdldapService
     private $adLdap;
 
     /**
-     * @var array The Active Directory parameters (see ztec.security.active_directory.settings)
+     * @var array The Active Directory parameters (see riper.security.active_directory.settings)
      */
     private $parameters;
 

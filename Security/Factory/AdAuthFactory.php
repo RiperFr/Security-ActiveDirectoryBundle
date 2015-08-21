@@ -1,6 +1,6 @@
 <?php
 
-namespace Ztec\Security\ActiveDirectoryBundle\Security\Factory;
+namespace Riper\Security\ActiveDirectoryBundle\Security\Factory;
 
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FormLoginFactory;
@@ -32,13 +32,13 @@ class AdAuthFactory extends FormLoginFactory
      */
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
-        $providerId = 'security.authentication.provider.ztec.active_directory.' . $id;
+        $providerId = 'security.authentication.provider.riper.active_directory.' . $id;
         $container
             ->setDefinition(
                 $providerId,
-                new DefinitionDecorator('ztec.security.active.directory.authentication.provider')
+                new DefinitionDecorator('riper.security.active.directory.authentication.provider')
             )
-            ->replaceArgument(0, new Reference("ztec.security.active.directory.user.provider"))
+            ->replaceArgument(0, new Reference("riper.security.active.directory.user.provider"))
             ->replaceArgument(1, $config);
 
         return $providerId;

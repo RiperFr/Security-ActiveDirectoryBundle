@@ -1,6 +1,6 @@
 <?php
 
-namespace Ztec\Security\ActiveDirectoryBundle\Security\User;
+namespace Riper\Security\ActiveDirectoryBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 

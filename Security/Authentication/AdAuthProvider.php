@@ -1,6 +1,6 @@
 <?php
 
-namespace Ztec\Security\ActiveDirectoryBundle\Security\Authentication;
+namespace Riper\Security\ActiveDirectoryBundle\Security\Authentication;
 
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -8,9 +8,9 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Translation\TranslatorInterface;
-use Ztec\Security\ActiveDirectoryBundle\Security\User\AdUserProvider;
-use Ztec\Security\ActiveDirectoryBundle\Security\User\AdUser;
-use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
+use Riper\Security\ActiveDirectoryBundle\Security\User\AdUserProvider;
+use Riper\Security\ActiveDirectoryBundle\Security\User\AdUser;
+use Riper\Security\ActiveDirectoryBundle\Service\AdldapService;
 
 class AdAuthProvider implements AuthenticationProviderInterface
 {
@@ -54,7 +54,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
         if ($User instanceof AdUser) {
             if (!$Adldap->authenticate($User->getUsername(), $token->getCredentials())) {
                 $msg = $this->translator->trans(
-                    'ztec.security.active_directory.wrong_credential'
+                    'riper.security.active_directory.wrong_credential'
                 ); //'The credentials are wrong'
                 throw new BadCredentialsException($msg);
             }
@@ -64,7 +64,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
         $newToken = new $this->tokenClass(
             $User,
             $token->getCredentials(),
-            'ztec.security.active.directory.user.provider',
+            'riper.security.active.directory.user.provider',
             $User->getRoles()
         );
 

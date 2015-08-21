@@ -1,6 +1,6 @@
 <?php
 
-namespace Ztec\Security\ActiveDirectoryBundle\Security\User;
+namespace Riper\Security\ActiveDirectoryBundle\Security\User;
 
 use adLDAP\adLDAP;
 use adLDAP\collections\adLDAPUserCollection;
@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Translation\TranslatorInterface;
-use Ztec\Security\ActiveDirectoryBundle\Service\AdldapService;
+use Riper\Security\ActiveDirectoryBundle\Service\AdldapService;
 
 class AdUserProvider implements UserProviderInterface
 {
@@ -82,7 +82,7 @@ class AdUserProvider implements UserProviderInterface
             );
         } catch (\InvalidArgumentException $e) {
             $msg = $this->translator->trans(
-                'ztec.security.active_directory.invalid_user',
+                'riper.security.active_directory.invalid_user',
                 array('%reason%' => $e->getMessage())
             );
             throw new UsernameNotFoundException($msg);
@@ -117,7 +117,7 @@ class AdUserProvider implements UserProviderInterface
         }
 
         $msg = $this->translator->trans(
-            'ztec.security.active_directory.username_not_matching_rules',
+            'riper.security.active_directory.username_not_matching_rules',
             array(
                 '%username%' => $username
             )
@@ -143,7 +143,7 @@ class AdUserProvider implements UserProviderInterface
     {
         if (!$user instanceof AdUser) {
             $msg = $this->translator->trans(
-                'ztec.security.active_directory.bad_instance',
+                'riper.security.active_directory.bad_instance',
                 array(
                     '%class_name%' => get_class($user)
                 )
@@ -167,7 +167,7 @@ class AdUserProvider implements UserProviderInterface
         $isAD      = $adLdap->authenticate($adUser->getUsername(), $token->getCredentials());
         if (!$isAD || !$connected) {
             $msg = $this->translator->trans(
-                'ztec.security.active_directory.ad.bad_response',
+                'riper.security.active_directory.ad.bad_response',
                 array(
                     '%connection_status%' => var_export($connected, 1),
                     '%is_AD%'             => var_export($isAD, 1),
@@ -228,6 +228,6 @@ class AdUserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === 'Ztec\Security\ActiveDirectoryBundle\Security\User\AdUser';
+        return $class === 'Riper\Security\ActiveDirectoryBundle\Security\User\AdUser';
     }
 }
