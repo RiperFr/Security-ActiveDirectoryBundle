@@ -4,6 +4,7 @@ namespace Riper\Security\ActiveDirectoryBundle\Security\User;
 
 use adLDAP\adLDAP;
 use adLDAP\collections\adLDAPUserCollection;
+use Riper\Security\ActiveDirectoryBundle\Exception\ADConnexionException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -173,7 +174,7 @@ class AdUserProvider implements UserProviderInterface
                     '%is_AD%'             => var_export($isAD, 1),
                 )
             );
-            throw new \Exception(
+            throw new ADConnexionException(
                 $msg
             );
         }
