@@ -29,13 +29,15 @@ class AdAuthProvider implements AuthenticationProviderInterface
         array $config,
         AdldapService $AdldapService,
         TranslatorInterface $translator,
-        $tokenClass
+        $tokenClasses,
+        $riperConfig
     ) {
-        $this->userProvider  = $userProvider;
-        $this->config        = $config;
+        $this->userProvider = $userProvider;
+        $this->config = $config;
         $this->AdldapService = $AdldapService;
-        $this->translator    = $translator;
-        $this->tokenClass    = $tokenClass;
+        $this->translator = $translator;
+        $this->tokenClasses = $tokenClasses;
+        $this->riperConfig = $riperConfig;
     }
 
     /**
@@ -50,7 +52,7 @@ class AdAuthProvider implements AuthenticationProviderInterface
     public function authenticate(TokenInterface $token)
     {
         $Adldap = $this->AdldapService->getInstance();
-        $User   = $this->userProvider->loadUserByUsername($token->getUsername());
+        $User = $this->userProvider->loadUserByUsername($token->getUsername());
         if ($User instanceof AdUser) {
             if (!$Adldap->authenticate($User->getUsername(), $token->getCredentials())) {
                 $msg = $this->translator->trans(
@@ -61,12 +63,21 @@ class AdAuthProvider implements AuthenticationProviderInterface
             $this->userProvider->fetchData($User, $token, $Adldap);
         }
 
-        $newToken = new $this->tokenClass(
-            $User,
-            $token->getCredentials(),
-            'riper.security.active.directory.user.provider',
-            $User->getRoles()
-        );
+        if (isset($this->riperConfig['keep_password_in_token']) && $this->riperConfig['keep_password_in_token']) {
+            $newToken = new $this->tokenClasses['faulty'](
+                $User,
+                $token->getCredentials(),
+                'riper.security.active.directory.user.provider',
+                $User->getRoles()
+            );
+        } else {
+            $newToken = new $this->tokenClasses['standard'](
+                $User,
+                $token->getCredentials(),
+                'riper.security.active.directory.user.provider',
+                $User->getRoles()
+            );
+        }
 
         return $newToken;
     }

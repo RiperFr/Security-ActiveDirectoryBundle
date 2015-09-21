@@ -38,6 +38,7 @@ You need to configure your domain specific information
             domain_controllers : [ baudrive.kim.riper.fr ] #Servers to use for ldap connection (Random)
             admin_username: #Null to use the userConnection
             admin_password: #Null to use the userConnection
+            keep_password_in_token: false #Set to true if you want to re-use the adldap instance to make further queries (This is a security issue because the password is kept in session)
             real_primarygroup : true #For Linux compatibility.
             use_ssl : false #Set it true need configuration of the server to be useful
             use_tls : false #Set it true need configuration of the server to be useful
