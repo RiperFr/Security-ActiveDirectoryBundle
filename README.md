@@ -21,7 +21,7 @@ Installation
 You need to add a package to your dependency list :
 
     // composer.json
-    "riper/active_directory": "1.*"
+    "riper/security-active_directory": "1.*"
 
 You need to enable the bundle into your kernel
 
