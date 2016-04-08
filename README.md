@@ -12,7 +12,7 @@ php_ldap
 
 ssl configuration for LDAP. see http://adldap.sourceforge.net/wiki/doku.php?id=ldap_over_ssl
 
-Compatible with Symfony 2 starting from 2.1
+Compatible with Symfony 2 starting from 2.6
 
 
 Installation
