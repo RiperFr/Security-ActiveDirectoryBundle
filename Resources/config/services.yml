@@ -21,5 +21,5 @@ services:
         arguments: [ "%riper.security.active_directory.settings%"]
 
     riper.security.active.directory.factory.adldap:
-        class: Riper\Security\ActiveDirectoryBundle\Security\Factory\AdldapFactory
-        arguments: [ "@security.context", "@riper.security.active.directory.service.adldap" ]
+        class: "Riper\Security\ActiveDirectoryBundle\Security\Factory\AdldapFactory"
+        arguments: [ "@security.token_storage", "@riper.security.active.directory.service.adldap" ]
