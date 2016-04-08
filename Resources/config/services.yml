@@ -4,22 +4,22 @@ parameters:
     riper_security_active_directory_token_faulty : Riper\Security\ActiveDirectoryBundle\Security\Token\FaultyToken
 
     riper_security_tokens_classes :
-        standard : %riper_security_active_directory_token%
-        faulty : %riper_security_active_directory_token_faulty%
+        standard : "%riper_security_active_directory_token%"
+        faulty : "%riper_security_active_directory_token_faulty%"
 
 services:
     riper.security.active.directory.user.provider:
-        class: "Riper\Security\ActiveDirectoryBundle\Security\User\AdUserProvider"
+        class: Riper\Security\ActiveDirectoryBundle\Security\User\AdUserProvider
         arguments: ["%riper.security.active_directory.settings%", "@riper.security.active.directory.service.adldap", "@translator"]
 
     riper.security.active.directory.authentication.provider:
-        class: "Riper\Security\ActiveDirectoryBundle\Security\Authentication\AdAuthProvider"
+        class: Riper\Security\ActiveDirectoryBundle\Security\Authentication\AdAuthProvider
         arguments: ["@riper.security.active.directory.user.provider", "", "@riper.security.active.directory.service.adldap", "@translator", "%riper_security_tokens_classes%", %riper.security.active_directory.settings% ]
 
     riper.security.active.directory.service.adldap:
-        class: "Riper\Security\ActiveDirectoryBundle\Service\AdldapService"
+        class: Riper\Security\ActiveDirectoryBundle\Service\AdldapService
         arguments: [ "%riper.security.active_directory.settings%"]
 
     riper.security.active.directory.factory.adldap:
-        class: "Riper\Security\ActiveDirectoryBundle\Security\Factory\AdldapFactory"
-        arguments: [ @security.context, @riper.security.active.directory.service.adldap ]
+        class: Riper\Security\ActiveDirectoryBundle\Security\Factory\AdldapFactory
+        arguments: [ "@security.context", "@riper.security.active.directory.service.adldap" ]
