@@ -14,7 +14,7 @@ services:
 
     riper.security.active.directory.authentication.provider:
         class: Riper\Security\ActiveDirectoryBundle\Security\Authentication\AdAuthProvider
-        arguments: ["@riper.security.active.directory.user.provider", "", "@riper.security.active.directory.service.adldap", "@translator", "%riper_security_tokens_classes%", %riper.security.active_directory.settings% ]
+        arguments: ["@riper.security.active.directory.user.provider", "", "@riper.security.active.directory.service.adldap", "@translator", "%riper_security_tokens_classes%", "%riper.security.active_directory.settings%" ]
 
     riper.security.active.directory.service.adldap:
         class: Riper\Security\ActiveDirectoryBundle\Service\AdldapService
