@@ -5,7 +5,7 @@ namespace Riper\Security\ActiveDirectoryBundle\Security\Factory;
 
 use Riper\Security\ActiveDirectoryBundle\Exception\WrongTokenException;
 use Riper\Security\ActiveDirectoryBundle\Service\AdldapService;
-use Riper\Security\ActiveDirectoryBundle\Token\FaultyToken;
+use Riper\Security\ActiveDirectoryBundle\Security\Token\FaultyToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\SecurityContext;
 
