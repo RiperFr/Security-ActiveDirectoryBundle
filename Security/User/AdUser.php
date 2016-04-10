@@ -21,6 +21,10 @@ class AdUser implements UserInterface
     /** @var string */
     private $email;
 
+    /**
+     * @param string $username
+     * @param string $password
+     */
     public function __construct($username, $password, array $roles)
     {
         $this->username = $username;
