@@ -4,6 +4,16 @@ Riper/Security/ActiveDirectory
 This package is a bundle for Symfony 2. It uses the standard form_login security model to authenticate user from an Active Directory domain.
 It uses LDAP as communication layer, so you need the LDAP extension installed on your server to make it work.
 
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/RiperFr/Security-ActiveDirectoryBundle/badges/quality-score.png?b=v2.x)](https://scrutinizer-ci.com/g/RiperFr/Security-ActiveDirectoryBundle/?branch=v2.x)
+![License CC-BY-4](https://img.shields.io/badge/licence-CC--BY--4.0-blue.svg)
+![php version](https://img.shields.io/badge/php->=5.3.0,%205.4,%205.5,%205.6,%207-blue.svg)
+![symfony version](https://img.shields.io/badge/symfony-2.6,%202.7,%202.8,%203-blue.svg)
+
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/3628b49a-0ab1-4412-94cf-328809040af1/big.png)](https://insight.sensiolabs.com/projects/3628b49a-0ab1-4412-94cf-328809040af1)
+
+
+
 Requirements
 ----------------
 php 5.3.0

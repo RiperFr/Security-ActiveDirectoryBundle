@@ -180,27 +180,9 @@ class AdUserProvider implements UserProviderInterface
         }
         /** @var adLDAPUserCollection $user */
         $user = $adLdap->user()->infoCollection($adUser->getUsername());
-        //$userInfo = $adLdap->user_info($this->username);
 
         if ($user) {
-            $groups = array();
-            //$allGroups = $adLdap->search_groups(ADLDAP_SECURITY_GLOBAL_GROUP,true);
             $groups = $adLdap->user()->groups($adUser->getUsername(), $this->recursiveGrouproles);
-            /*if ($this->recursiveGrouproles == true) {
-                // get recursive groups via adLdap
-                $groups = $adLdap->user()->groups($adUser->getUsername(), true);
-            } else {
-                foreach ($user->memberOf as $k => $group) {
-                    if ($k !== 'count' && $group) {
-                        $reg = '#CN=([^,]*)#';
-                        preg_match_all($reg, $group, $out);
-                        $groups[] = $out[1][0];
-                        /*if(array_key_exists($out[1][0],$allGroups)){
-                             $groups[$out[1][0]] = $allGroups[$out[1][0]];
-                         }*/
-                    /*}
-                }
-            }*/
             /** End Fetching */
             $sfRoles = array();
             $sfRolesTemp = array();
