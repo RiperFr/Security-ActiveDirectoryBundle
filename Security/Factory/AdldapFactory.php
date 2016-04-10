@@ -3,35 +3,34 @@
 
 namespace Riper\Security\ActiveDirectoryBundle\Security\Factory;
 
-
 use Riper\Security\ActiveDirectoryBundle\Exception\WrongTokenException;
 use Riper\Security\ActiveDirectoryBundle\Service\AdldapService;
-use Riper\Security\ActiveDirectoryBundle\Token\FaultyToken;
-use Symfony\Component\Security\Core\SecurityContext;
+use Riper\Security\ActiveDirectoryBundle\Security\Token\FaultyToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class AdldapFactory
 {
 
     /**
-     * @var SecurityContext
+     * @var TokenStorage
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @var AdldapService
      */
     private $adldapService;
 
-    public function __construct(SecurityContext $securityContext, AdldapService $adldapService)
+    public function __construct(TokenStorage $tokenStorage, AdldapService $adldapService)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->adldapService = $adldapService;
     }
 
 
     public function getAuthenticatedAdLdap()
     {
-        $token = $this->securityContext->getToken();
+        $token = $this->tokenStorage->getToken();
         if ($token instanceof FaultyToken) {
             throw new WrongTokenException(
                 'The token is not the right one. Did you forget to set "keep_password_in_token" to "true" in bundle configuration ?'
