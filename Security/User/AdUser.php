@@ -12,10 +12,7 @@ class AdUser implements UserInterface
     /** @var string */
     private $password;
 
-    /** @var string */
-    private $salt;
-
-    /** @var string */
+    /** @var array */
     private $roles;
 
     /** @var string */
@@ -28,7 +25,6 @@ class AdUser implements UserInterface
     {
         $this->username = $username;
         $this->password = $password;
-        $this->salt = '';
         $this->roles = $roles;
     }
 
