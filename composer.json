@@ -4,7 +4,7 @@
     "description": "This is a bundle to allow authentication into symfony >= 2.1 by an Active directory",
     "keywords": ["active directory","ldap","symfony","bundle"],
     "homepage": "https://github.com/RiperFr/Security-ActiveDirectoryBundle",
-    "license": "CC-BY",
+    "license": "CC-BY-4.0",
     "authors": [
         {
             "name": "Loïc Doubinine",
