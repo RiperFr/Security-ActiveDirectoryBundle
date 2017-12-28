@@ -67,14 +67,14 @@ class AdAuthProvider implements AuthenticationProviderInterface
             $newToken = new $this->tokenClasses['faulty'](
                 $User,
                 $token->getCredentials(),
-                'riper.security.active.directory.user.provider',
+                $this->config['firewall_id'],
                 $User->getRoles()
             );
         } else {
             $newToken = new $this->tokenClasses['standard'](
                 $User,
                 $token->getCredentials(),
-                'riper.security.active.directory.user.provider',
+                $this->config['firewall_id'],
                 $User->getRoles()
             );
         }

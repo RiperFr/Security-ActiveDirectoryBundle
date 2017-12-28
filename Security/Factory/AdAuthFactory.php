@@ -22,13 +22,15 @@ class AdAuthFactory extends FormLoginFactory
      *
      * @param ContainerBuilder $container
      * @param string $id             The unique id of the firewall
-     * @param array $config         The options array for this listener
+     * @param array  $config         The options array for this listener
      * @param string $userProviderId The id of the user provider
      *
      * @return string never null, the id of the authentication provider
      */
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
+        $config['firewall_id'] = $id;
+
         $providerId = 'security.authentication.provider.riper.active_directory.' . $id;
         $container
             ->setDefinition(
